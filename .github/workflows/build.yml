@@ -25,6 +25,7 @@ jobs:
 
       - name: Configure build
         run: |
+          ./build_files/build_environment/install_deps.sh
           mkdir build && cd build
           cmake .. -G Ninja \
             -DWITH_X11=OFF \
