@@ -22,8 +22,8 @@ jobs:
             libx11-dev libxi-dev libxxf86vm-dev libxcursor-dev \
             libxrandr-dev libxinerama-dev libglew-dev libfreetype6-dev \
             libjpeg-dev libpng-dev libtiff-dev python3-dev
-
-      - name: Configure build
+ 
+      - name: Configure build (verbose)
         run: |
           ./build_files/build_environment/install_deps.sh
           mkdir build && cd build
