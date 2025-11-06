@@ -1,0 +1,58 @@
+name: Build Blender 2.79b (Auto Release)
+
+on:
+  push:
+    branches: [ blender-v2.79b-release ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential cmake ninja-build git \
+            libx11-dev libxi-dev libxxf86vm-dev libxcursor-dev \
+            libxrandr-dev libxinerama-dev libglew-dev libfreetype6-dev \
+            libjpeg-dev libpng-dev libtiff-dev python3-dev
+ 
+      - name: Configure build (verbose)
+        run: |
+          ./build_files/build_environment/install_deps.sh
+          mkdir build && cd build
+          cmake .. -G Ninja \
+            -DWITH_X11=OFF \
+            -DWITH_INSTALL_PORTABLE=ON \
+            -DWITH_PYTHON_INSTALL=OFF \
+            -DWITH_PYTHON_MODULE=OFF \
+            -DWITH_CYCLES_DEVICE_CUDA=OFF \
+            -DWITH_CYCLES_DEVICE_OPENCL=OFF \
+            -DWITH_PLAYER=OFF
+
+      - name: Build Blender
+        run: |
+          cd build
+          ninja
+
+      - name: Prepare release artifact
+        run: |
+          mkdir -p dist
+          cp build/bin/blender dist/
+          cd dist
+          tar czf blender-2.79b-linux.tar.gz blender
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: blender-v2.79b-auto
+          name: Blender 2.79b Auto Build
+          draft: false
+          prerelease: true
+      
