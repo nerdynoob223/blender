@@ -788,7 +788,7 @@ if(WITH_PYTHON)
 	# because UNIX will search for the old Python paths which may not exist.
 	# giving errors about missing paths before this case is met.
 	if(DEFINED PYTHON_VERSION AND "${PYTHON_VERSION}" VERSION_LESS "3.6")
-		message(FATAL_ERROR "At least Python 3.6 is required to build")
+		message(WARNING "At least Python 3.6 is required to build")
 	endif()
 
 	if(NOT EXISTS "${CMAKE_SOURCE_DIR}/release/scripts/addons/modules")
